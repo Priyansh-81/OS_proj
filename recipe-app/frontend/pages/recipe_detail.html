@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Details - Recipe App</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Recipe Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="search.html">Search Recipes</a></li>
+                <li><a href="favorites.html">Favorites</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="logout.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="recipe-detail">
+            <h2 id="recipeTitle">Recipe Name</h2>
+            <p><strong>Cuisine:</strong> <span id="recipeCuisine">Loading...</span></p>
+            <p><strong>Diet Type:</strong> <span id="recipeDiet">Loading...</span></p>
+            <p><strong>Difficulty:</strong> <span id="recipeDifficulty">Loading...</span></p>
+            <p><strong>Cooking Time:</strong> <span id="recipeTime">Loading...</span> minutes</p>
+
+            <h3>Ingredients</h3>
+            <ul id="ingredientList">
+                <li>Loading...</li>
+            </ul>
+
+            <h3>Instructions</h3>
+            <p id="recipeInstructions">Loading...</p>
+
+            <button onclick="addToFavorites()">Add to Favorites</button>
+        </section>
+
+        <section class="ratings">
+            <h3>Ratings & Reviews</h3>
+            <div id="ratingContainer">
+                <p>Loading reviews...</p>
+            </div>
+
+            <h4>Leave a Review</h4>
+            <label for="rating">Rating (0-5):</label>
+            <input type="number" id="rating" min="0" max="5">
+            <label for="reviewText">Review:</label>
+            <textarea id="reviewText" rows="4"></textarea>
+            <button onclick="submitReview()">Submit Review</button>
+        </section>
+    </main>
+
+    <script>
+        function loadRecipeDetails() {
+            // sample recipe data (this would be fetched from the backend)
+            let recipe = {
+                title: "Spaghetti Bolognese",
+                cuisine: "Italian",
+                diet: "Non-Vegetarian",
+                difficulty: "Medium",
+                time: 40,
+                ingredients: ["Spaghetti", "Tomato Sauce", "Ground Beef", "Garlic", "Onion"],
+                instructions: "Boil spaghetti. Cook beef with garlic and onion. Add tomato sauce. Mix and serve."
+            };
+
+            document.getElementById("recipeTitle").innerText = recipe.title;
+            document.getElementById("recipeCuisine").innerText = recipe.cuisine;
+            document.getElementById("recipeDiet").innerText = recipe.diet;
+            document.getElementById("recipeDifficulty").innerText = recipe.difficulty;
+            document.getElementById("recipeTime").innerText = recipe.time;
+            document.getElementById("recipeInstructions").innerText = recipe.instructions;
+
+            let ingredientList = document.getElementById("ingredientList");
+            ingredientList.innerHTML = "";
+            recipe.ingredients.forEach(ingredient => {
+                let li = document.createElement("li");
+                li.innerText = ingredient;
+                ingredientList.appendChild(li);
+            });
+        }
+
+        function addToFavorites() {
+            alert("Recipe added to favorites!");
+        }
+
+        function submitReview() {
+            let rating = document.getElementById("rating").value;
+            let reviewText = document.getElementById("reviewText").value;
+
+            if (rating < 0 || rating > 5) {
+                alert("Please enter a rating between 0 and 5.");
+                return;
+            }
+
+            console.log("Review Submitted:", { rating, reviewText });
+            alert("Review submitted successfully!");
+        }
+
+        window.onload = loadRecipeDetails;
+    </script>
+    <script src="../assets/js/recipe.js"></script>
+    <script src="../assets/js/ratings.js"></script>  
+</body>
+</html>

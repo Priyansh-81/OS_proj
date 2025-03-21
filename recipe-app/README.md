@@ -1,0 +1,8 @@
+# DATABASE MANAGEMENT SYSTEM PROJECT
+
+## RECIPE MANAGEMENT AND RECOMMENDATION SYSTEM
+
+### Members
+Yukti Bhatia
+Abhishek A
+Priyansh Nandan

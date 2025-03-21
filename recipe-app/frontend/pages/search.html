@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Recipes - Recipe App</title>
+    <link rel="stylesheet" href="/frontend/assets/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Recipe Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="favorites.html">Favorites</a></li>
+                <li><a href="logout.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="search-container">
+            <h2>Search Recipes</h2>
+            <input type="text" id="searchBar" placeholder="Search by name, cuisine, or ingredient..." onkeyup="searchRecipes()">
+
+            <h3>Filters</h3>
+            <label for="cuisine">Cuisine:</label>
+            <select id="cuisine">
+                <option value="">All</option>
+                <option value="Italian">Italian</option>
+                <option value="Indian">Indian</option>
+                <option value="Mexican">Mexican</option>
+            </select>
+
+            <label for="diet">Diet Type:</label>
+            <select id="diet">
+                <option value="">All</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Vegan">Vegan</option>
+                <option value="Non-Vegetarian">Non-Vegetarian</option>
+            </select>
+
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty">
+                <option value="">All</option>
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+            </select>
+
+            <button onclick="applyFilters()">Apply Filters</button>
+
+            <h3>Recipes</h3>
+            <div id="recipeList">
+                <p>Loading recipes...</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function searchRecipes() {
+            let query = document.getElementById("searchBar").value.toLowerCase();
+            console.log("Searching for: " + query);
+        }
+
+        function applyFilters() {
+            let cuisine = document.getElementById("cuisine").value;
+            let diet = document.getElementById("diet").value;
+            let difficulty = document.getElementById("difficulty").value;
+
+            console.log("Applying filters:", { cuisine, diet, difficulty });
+        }
+    </script>
+</body>
+</html>

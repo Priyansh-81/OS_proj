@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe App - Home</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Recipe App</h1>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="recipe-listing.html">Recipes</a></li>
+                <li><a href="favorites.html">Favorites</a></li>
+                <li><a href="recommendations.html">Recommendations</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="search-bar">
+            <h2>Find Your Next Favorite Recipe</h2>
+            <input type="text" id="searchInput" placeholder="Search recipes or ingredients...">
+            <button onclick="searchRecipes()">Search</button>
+        </section>
+
+        <section class="featured-recipes">
+            <h2>Featured Recipes</h2>
+            <div class="recipe-grid">
+                <div class="recipe-card">
+                    <img src="../assets/images/recipe1.jpg" alt="Recipe 1">
+                    <h3>Spaghetti Carbonara</h3>
+                    <p>Classic Italian pasta dish.</p>
+                    <a href="./recipe_detail.html">View Recipe</a>
+                </div>
+
+                <div class="recipe-card">
+                    <img src="../assets/images/recipe2.jpg" alt="Recipe 2">
+                    <h3>Grilled Chicken Salad</h3>
+                    <p>Healthy and delicious.</p>
+                    <a href="recipe_detail.html">View Recipe</a>
+                </div>
+
+                <div class="recipe-card">
+                    <img src="../assets/images/recipe3.jpg" alt="Recipe 3">
+                    <h3>Vegetable Stir Fry</h3>
+                    <p>Quick and easy meal.</p>
+                    <a href="recipe_detail.html">View Recipe</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function searchRecipes() {
+            const query = document.getElementById("searchInput").value;
+            alert("Searching for: " + query);
+        }
+    </script>
+    <script src="../assets/js/home.js"></script>
+</body>
+</html>

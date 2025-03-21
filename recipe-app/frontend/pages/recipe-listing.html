@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Listing</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Recipe Listing</h1>
+        <input type="text" id="searchBar" placeholder="Search recipes...">
+    </header>
+    <main>
+        <div class="filters">
+            <label for="cuisine">Cuisine:</label>
+            <select id="cuisine">
+                <option value="all">All</option>
+                <option value="italian">Italian</option>
+                <option value="indian">Indian</option>
+                <option value="mexican">Mexican</option>
+            </select>
+            
+            <label for="diet">Diet Type:</label>
+            <select id="diet">
+                <option value="all">All</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="vegan">Vegan</option>
+                <option value="non-vegetarian">Non-Vegetarian</option>
+            </select>
+            
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty">
+                <option value="all">All</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        <div id="recipeContainer" class="recipe-grid">
+            <!-- Recipes will be dynamically loaded here -->
+        </div>
+    </main>
+    <script src="../assets/js/recipe.js"></script>
+</body>
+</html>
