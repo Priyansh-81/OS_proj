@@ -1,7 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
 const cors = require('cors'); // Import CORS
 
 const app = express();
@@ -28,11 +27,12 @@ db.connect(err => {
 });
 
 // Handle registration route
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', (req, res) => {
   console.log('Received registration request:', req.body); // Log the request body
 
   let { userID, name, email, password } = req.body;
 
+  // Validate input
   if (!userID || !name || !email || !password) {
     return res.status(400).json({ error: 'All fields are required!' });
   }
@@ -41,28 +41,16 @@ app.post('/api/register', async (req, res) => {
   if (isNaN(userID)) {
     return res.status(400).json({ error: 'UserID must be a valid integer!' });
   }
-  db.query(query, [name, email, hashedPassword], (err, result) => {
+
+  // Insert user into the database without hashing the password
+  const query = 'INSERT INTO Users (UserID, Name, Email, Password) VALUES (?, ?, ?, ?)';
+  db.query(query, [userID, name, email, password], (err, result) => {
     if (err) {
-      console.error('Error inserting user: ', err);  // Log the error here
+      console.error('Error inserting user: ', err); // Log the error
       return res.status(500).json({ error: 'Registration failed.' });
     }
     res.status(200).json({ message: 'Registration successful!' });
   });
-
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const query = 'INSERT INTO Users (UserID, Name, Email, Password) VALUES (?, ?, ?, ?)';
-    db.query(query, [userID, name, email, hashedPassword], (err, result) => {
-      if (err) {
-        console.error('Error inserting user: ', err); // Log the error
-        return res.status(500).json({ error: 'Registration failed.' });
-      }
-      res.status(200).json({ message: 'Registration successful!' });
-    });
-  } catch (error) {
-    console.error('Error during registration: ', error); // Log the error
-    res.status(500).json({ error: 'Internal server error.' });
-  }
 });
 
 // Start the server
