@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupDarkMode();
 });
 
-// 🟢 1. Navigation Menu Toggle (Improved with Accessibility)
 function setupNavMenu() {
     const menuToggle = document.querySelector("#menu-toggle");
     const navMenu = document.querySelector("#nav-menu");
@@ -25,7 +24,6 @@ function setupNavMenu() {
     }
 }
 
-// 🟢 2. Form Validation (Stronger Checks & UX Enhancements)
 function setupFormValidation() {
     document.querySelectorAll("form").forEach((form) => {
         form.addEventListener("submit", (event) => {
@@ -84,7 +82,6 @@ function isStrongPassword(password) {
     return /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/.test(password);
 }
 
-// 🟢 3. Smooth Scrolling with Header Offset
 function setupSmoothScrolling() {
     document.querySelectorAll("a[href^='#']").forEach((anchor) => {
         anchor.addEventListener("click", (event) => {
@@ -106,7 +103,6 @@ function setupSmoothScrolling() {
     });
 }
 
-// 🟢 4. Dark Mode Toggle with LocalStorage
 function setupDarkMode() {
     const darkModeToggle = document.querySelector("#dark-mode-toggle");
     if (!darkModeToggle) return;

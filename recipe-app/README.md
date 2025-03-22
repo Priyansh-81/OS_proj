@@ -3,6 +3,8 @@
 ## RECIPE MANAGEMENT AND RECOMMENDATION SYSTEM
 
 ### Members
-Yukti Bhatia
-Abhishek A
-Priyansh Nandan
+<li>
+    <ul>Yukti Bhatia
+    <ul>Abhishek A
+    <ul>Priyansh Nandan
+</li>
