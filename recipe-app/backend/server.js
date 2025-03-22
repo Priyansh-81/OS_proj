@@ -26,32 +26,34 @@ db.connect(err => {
   console.log('Connected to MySQL database');
 });
 
-// Handle registration route
 app.post('/api/register', (req, res) => {
-  console.log('Received registration request:', req.body); // Log the request body
+  console.log('Received registration request:', req.body);
 
-  let { userID, name, email, password } = req.body;
+  const { name, email, password } = req.body;
 
-  // Validate input
-  if (!userID || !name || !email || !password) {
+  if (!name || !email || !password) {
     return res.status(400).json({ error: 'All fields are required!' });
   }
 
-  userID = parseInt(userID);
-  if (isNaN(userID)) {
-    return res.status(400).json({ error: 'UserID must be a valid integer!' });
-  }
-
-  const query = 'INSERT INTO Users (UserID, Name, Email, Password) VALUES (?, ?, ?, ?)';
-  db.query(query, [userID, name, email, password], (err, result) => {
+  // Get the next UserID manually
+  db.query('SELECT MAX(UserID) AS maxId FROM Users', (err, result) => {
     if (err) {
-      console.error('Error inserting user: ', err); // Log the error
+      console.error('Error fetching max UserID: ', err);
       return res.status(500).json({ error: 'Registration failed.' });
     }
-    res.status(200).json({ message: 'Registration successful!' });
+
+    const nextUserID = (result[0].maxId || 0) + 1;
+
+    const query = 'INSERT INTO Users (UserID, Name, Email, Password) VALUES (?, ?, ?, ?)';
+    db.query(query, [nextUserID, name, email, password], (err, result) => {
+      if (err) {
+        console.error('Error inserting user: ', err);
+        return res.status(500).json({ error: 'Registration failed.' });
+      }
+      res.status(200).json({ message: 'Registration successful!' });
+    });
   });
 });
-
 app.post('/api/admin/login', (req, res) => {
   const { email, password } = req.body;
 

@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
     registerForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
-        const userID = document.getElementById("userID").value.trim();
         const name = document.getElementById("name").value.trim();
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value.trim();
@@ -14,19 +13,13 @@ document.addEventListener("DOMContentLoaded", function () {
         registerError.textContent = "";
         registerError.style.display = "none";
 
-        if (!userID) {
-            registerError.textContent = "User ID is required!";
-            registerError.style.display = "block";
-            return;
-        }
-
         if (password !== confirmPassword) {
             registerError.textContent = "Passwords do not match!";
             registerError.style.display = "block";
             return;
         }
 
-        const userData = { userID, name, email, password };
+        const userData = { name, email, password };
 
         try {
             const response = await fetch("http://localhost:5001/api/register", {
@@ -39,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (response.ok) {
                 alert("Registration successful! You can now log in.");
-                window.location.href = "login.html"; // Redirect to login page
+                window.location.href = "login.html";
             } else {
                 registerError.textContent = result.error || "Registration failed.";
                 registerError.style.display = "block";
