@@ -42,7 +42,6 @@ app.post('/api/register', (req, res) => {
     return res.status(400).json({ error: 'UserID must be a valid integer!' });
   }
 
-  // Insert user into the database without hashing the password
   const query = 'INSERT INTO Users (UserID, Name, Email, Password) VALUES (?, ?, ?, ?)';
   db.query(query, [userID, name, email, password], (err, result) => {
     if (err) {
@@ -50,6 +49,50 @@ app.post('/api/register', (req, res) => {
       return res.status(500).json({ error: 'Registration failed.' });
     }
     res.status(200).json({ message: 'Registration successful!' });
+  });
+});
+
+app.post('/api/admin/login', (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'All fields are required!' });
+  }
+
+  const query = 'SELECT * FROM Admin WHERE Email = ? AND Password = ?';
+  db.query(query, [email, password], (err, results) => {
+    if (err) {
+      console.error('Error fetching admin: ', err);
+      return res.status(500).json({ error: 'Login failed.' });
+    }
+
+    if (results.length > 0) {
+      res.status(200).json({ message: 'Login successful!', admin: results[0] });
+    } else {
+      res.status(401).json({ error: 'Invalid email or password.' });
+    }
+  });
+});
+
+app.post('/api/user/login', (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'All fields are required!' });
+  }
+
+  const query = 'SELECT * FROM Users WHERE Email = ? AND Password = ?';
+  db.query(query, [email, password], (err, results) => {
+    if (err) {
+      console.error('Error fetching user: ', err);
+      return res.status(500).json({ error: 'Login failed.' });
+    }
+
+    if (results.length > 0) {
+      res.status(200).json({ message: 'User login successful!', user: results[0] });
+    } else {
+      res.status(401).json({ error: 'Invalid user email or password.' });
+    }
   });
 });
 
