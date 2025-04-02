@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!adminProfile) {
         console.error("Admin not logged in. Redirecting...");
-        window.location.href = "adminlogin.html";
+        window.location.href = "../index.html";
         return;
     }
 
@@ -19,6 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Logout Functionality
     document.getElementById("logout-btn").addEventListener("click", () => {
         localStorage.removeItem("adminProfile"); // Clear session
-        window.location.href = "adminlogin.html"; // Redirect to login
+        window.location.href = "../index.html"; // Redirect to login
     });
 });

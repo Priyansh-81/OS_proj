@@ -263,6 +263,95 @@ form button {
 }
 
 .filters select:focus {
-    border-color: #ff6f61;
+    border-color: rgb(255, 111, 97);
     outline: none;
+}
+.recipe-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align content to the left */
+    justify-content: center;
+    width: 65vw;  
+    height: 50vh;  
+    background: rgba(255, 111, 97, 0.9); /* Soft translucent red */
+    padding: 40px;
+    border-radius: 35px;  
+    box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 8%;  
+    left: 50%;
+    transform: translateX(-50%);
+    color: #0000009c;
+    font-family: 'Poppins', sans-serif;
+    text-align: left; /* Ensures text is left-aligned */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* Hover effect: Slight upward shift + shadow increase */
+.recipe-details:hover {
+    transform: translateX(-50%) translateY(-5px); /* Moves box slightly up */
+    box-shadow: 0px 12px 40px rgba(0, 0, 0, 0.4); /* Adds a deeper shadow */
+}
+
+/* Button styling */
+.recipe-details button {
+    align-self: center; /* Keeps the button centered */
+    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    background: rgba(250, 0, 0, 0.8);
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    position: absolute;
+    bottom: -75px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Button hover effect */
+.recipe-details button:hover {
+    background: rgba(211, 20, 20, 0.9);
+    transform: translateX(-50%) translateY(-5px); /* Moves button slightly up */}
+
+/* Headings */
+.recipe-details h1 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #1f1c1c;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%; /* Ensures proper alignment */
+}
+
+/* Paragraphs */
+.recipe-details p {
+    font-size: 18px;
+    color: #4d4949;
+    line-height: 1.6;
+    max-width: 90%;
+    text-align: left;
+}
+
+/* Lists */
+.recipe-details ul, .recipe-details ol {
+    font-size: 18px;
+    color: #e0e0e0;
+    line-height: 1.6;
+    text-align: left;
+    max-width: 85%;
+}
+
+/* Strong text (bold elements) */
+.recipe-details strong {
+    display: block;
+    text-align: left;
+    width: 100%;
+    font-weight: bold;
+    color: #1f1c1c;
+    margin: 10px 0;
 }
