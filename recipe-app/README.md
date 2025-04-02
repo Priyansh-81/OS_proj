@@ -4,7 +4,7 @@
 
 ### Members
 <li>
-    <ul>Yukti Bhatia
-    <ul>Abhishek A
-    <ul>Priyansh Nandan
+    <ul>Yukti Bhatia</ul>
+    <ul>Abhishek A</ul>
+    <ul>Priyansh Nandan</ul>
 </li>
