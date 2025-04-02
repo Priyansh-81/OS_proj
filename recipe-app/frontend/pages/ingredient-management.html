@@ -23,6 +23,7 @@
     <main class="main-content">
         <h1>Manage Ingredients</h1>
         
+        <!-- Ingredient Form -->
         <form id="ingredient-form">
             <label for="name">Ingredient Name:</label>
             <input type="text" id="name" name="name" required>
@@ -33,27 +34,29 @@
             <button type="submit">Add Ingredient</button>
         </form>
 
+        <!-- Ingredient List -->
         <h2>Ingredient List</h2>
-        <table id="recipeList">
+        <!-- Search Box -->
+         <div class="search-container">
+            <input type="text" id="searchBox" placeholder="Search ingredients...">
+         </div>
+
+        <table id="ingredient-list">
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>nutritionalValue</th>
+                    <th>Nutritional Value</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-
-            <!-- Added correct tbody ID for JS -->
-            <tbody id="recipeTableBody">
-                <!-- Dynamic Recipe Rows will be added here -->
+            <tbody id="ingredient-list-body">
+                <!-- Dynamic Ingredient Rows will be added here -->
             </tbody>
         </table>
     </main>
 </div>
 
-<script src="../assets/js/admin.js"></script>
 <script src="../assets/js/ingredient-management.js"></script>
-<div class="message-box"></div>
-<div class="spinner"></div>
+
 </body>
 </html>

@@ -23,7 +23,7 @@ db.connect(err => {
     console.error('Error connecting to MySQL: ', err);
     return;
   }
-  console.log('✅ Connected to MySQL database');
+  console.log('Connected to MySQL database');
 });
 
 
@@ -191,15 +191,19 @@ app.delete('/api/recipes/:id', (req, res) => {
   });
 });
 
+
+
+
+
 app.get('/api/ingredients', (req, res) => {
-  db.query('SELECT * FROM Ingredients', (err, results) => {
-    if (err) {
-      console.error('Error fetching ingredients:', err);
-      return res.status(500).json({ error: 'Failed to fetch ingredients.' });
-    }
+  const query = 'SELECT * FROM Ingredient';
+  db.query(query, (err, results) => {
+    if (err) return res.status(500).json({ error: 'Failed to fetch recipes' });
     res.status(200).json(results);
   });
 });
+
+
 // Add new ingredient
 app.post('/api/ingredients', (req, res) => {
   const { name, nutritionalValue } = req.body;

@@ -38,7 +38,6 @@ function displayRecipes(recipes) {
             <p><strong>Cooking Time:</strong> ${recipe.CookingTime || "Unknown"} mins</p>
             <p><strong>Instructions:</strong> ${recipe.Instructions || "No instructions provided."}</p>
             <button class="view-button" onclick="expand('${recipe.RecipeID}')">View</button>
-            <button class="view-button" onclick="addfav('${recipe.RecipeID}')">Add to Favorite</button>
         `;
         recipeContainer.appendChild(recipeItem);
     });

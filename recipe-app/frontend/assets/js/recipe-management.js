@@ -6,18 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
         await addRecipe();
     });
+
+    // Add event listener for search input
+    document.getElementById("searchBox").addEventListener("keyup", searchRecipes);
 });
 
-
-console.log("Sending data:", {
-    adminID,
-    name,
-    cuisine,
-    dietType,
-    difficulty,
-    cookingTime,
-    instructions
-});
 // Fetch and display all recipes
 async function fetchRecipes() {
     try {
@@ -38,6 +31,7 @@ function displayRecipes(recipes) {
 
     recipes.forEach((recipe) => {
         const row = document.createElement("tr");
+        row.classList.add("recipe-row");
         row.innerHTML = `
             <td>${recipe.RecipeID}</td>
             <td>${recipe.Name}</td>
@@ -53,8 +47,26 @@ function displayRecipes(recipes) {
     });
 }
 
+// Search function for filtering recipes
+function searchRecipes() {
+    const searchTerm = document.getElementById("searchBox").value.toLowerCase();
+    const rows = document.querySelectorAll(".recipe-row");
+
+    rows.forEach((row) => {
+        const recipeName = row.cells[1].textContent.toLowerCase();
+        const cuisine = row.cells[2].textContent.toLowerCase();
+        const dietType = row.cells[3].textContent.toLowerCase();
+
+        if (recipeName.includes(searchTerm) || cuisine.includes(searchTerm) || dietType.includes(searchTerm)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+}
+
+// Add a new recipe
 async function addRecipe() {
-    // Retrieve adminID correctly from localStorage
     const adminID = localStorage.getItem("adminID");
 
     if (!adminID) {
@@ -70,7 +82,6 @@ async function addRecipe() {
     const cookingTime = parseInt(document.getElementById("cookingTime").value, 10);
     const instructions = document.getElementById("instructions").value.trim();
 
-    // Validation
     if (!name || !cuisine || !dietType || !difficulty || !cookingTime || !instructions) {
         alert("Please fill all fields.");
         return;
@@ -97,8 +108,8 @@ async function addRecipe() {
         }
 
         alert("Recipe added successfully!");
-        document.getElementById("addRecipeForm").reset(); // Clear form
-        fetchRecipes(); // Refresh recipe list
+        document.getElementById("addRecipeForm").reset();
+        fetchRecipes(); 
     } catch (error) {
         console.error("Error adding recipe:", error);
         alert("Error adding recipe: " + error.message);
@@ -117,7 +128,7 @@ async function deleteRecipe(recipeID) {
         if (!response.ok) throw new Error("Failed to delete recipe");
 
         alert("Recipe deleted successfully!");
-        fetchRecipes(); // Refresh the list
+        fetchRecipes();
     } catch (error) {
         console.error("Error deleting recipe:", error);
     }

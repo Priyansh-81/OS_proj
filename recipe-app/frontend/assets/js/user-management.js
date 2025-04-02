@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const userForm = document.getElementById('userForm');
     const userTable = document.querySelector('#userTable tbody');
+    const searchBox = document.getElementById('searchBox'); // Search input field
 
     // Fetch Users from Backend
     async function fetchUsers() {
@@ -17,7 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderUsers(users) {
         userTable.innerHTML = '';
         users.forEach(user => {
-            const row = `<tr>
+            const row = document.createElement('tr');
+            row.classList.add("user-row"); // Add class for search filtering
+            row.innerHTML = `
                 <td>${user.UserID}</td>
                 <td>${user.Name}</td>
                 <td>${user.Email}</td>
@@ -25,12 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button onclick="editUser(${user.UserID})">Edit</button>
                     <button onclick="deleteUser(${user.UserID})">Delete</button>
                 </td>
-            </tr>`;
-            userTable.innerHTML += row;
+            `;
+            userTable.appendChild(row);
         });
     }
 
-    // Handle Form Submission
+    // Handle Form Submission (Add or Update User)
     userForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -75,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Delete User
     window.deleteUser = async (id) => {
+        if (!confirm("Are you sure you want to delete this user?")) return;
         try {
             await fetch(`http://localhost:5001/api/users/${id}`, { method: 'DELETE' });
             fetchUsers();
@@ -82,6 +86,26 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error deleting user:', error);
         }
     };
+
+    // Search Users
+    function searchUsers() {
+        const searchTerm = searchBox.value.toLowerCase();
+        const rows = document.querySelectorAll(".user-row");
+
+        rows.forEach((row) => {
+            const userName = row.cells[1].textContent.toLowerCase();
+            const userEmail = row.cells[2].textContent.toLowerCase();
+
+            if (userName.includes(searchTerm) || userEmail.includes(searchTerm)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    // Attach search event listener
+    searchBox.addEventListener("keyup", searchUsers);
 
     // Initial Fetch
     fetchUsers();

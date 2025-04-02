@@ -285,3 +285,28 @@ form button:hover {
         font-size: 20px;
     }
 }
+/* SEARCH BAR STYLES */
+#searchBox {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+    margin: 20px auto;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 3px 8px var(--shadow);
+}
+
+#searchBox:focus {
+    border: 1px solid var(--primary-color);
+    outline: none;
+    box-shadow: 0px 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+/* Center search bar */
+.search-container {
+    text-align: center;
+    margin-bottom: 20px;
+}

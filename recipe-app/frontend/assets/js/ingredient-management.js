@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     const ingredientForm = document.getElementById("ingredient-form");
-    const ingredientList = document.getElementById("ingredient-list");
+    const searchBox = document.getElementById("searchBox");
+    const ingredientListBody = document.getElementById("ingredient-list-body");
+
+    // Ensure search works when typing
+    searchBox.addEventListener("keyup", searchIngredients);
 
     // Fetch ingredients from backend
     async function fetchIngredients() {
@@ -15,77 +19,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Render ingredients in table
     function renderIngredients(ingredients) {
-        ingredientList.innerHTML = `
-            <tr>
-                <th>Name</th>
-                <th>Nutritional Value</th>
-                <th>Actions</th>
-            </tr>`;
+        ingredientListBody.innerHTML = ""; // Clear previous entries
 
         ingredients.forEach((ingredient) => {
+            console.log("Rendering ingredient:", ingredient);
+
+            const { IngredientID, Name, NutritionalValue } = ingredient;
+
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${ingredient.Name}</td>
-                <td>${ingredient.NutritionalValue}</td>
+                <td>${Name}</td>
+                <td>${NutritionalValue}</td>
                 <td>
-                    <button onclick="editIngredient(${ingredient.IngredientID}, '${ingredient.Name}', ${ingredient.NutritionalValue})">Edit</button>
-                    <button onclick="deleteIngredient(${ingredient.IngredientID})">Delete</button>
+                    <button onclick="editIngredient(${IngredientID}, '${Name}', ${NutritionalValue})">Edit</button>
+                    <button onclick="deleteIngredient(${IngredientID})">Delete</button>
                 </td>`;
-            ingredientList.appendChild(row);
+            ingredientListBody.appendChild(row);
         });
+
+        searchIngredients(); // Apply search filter after rendering
     }
 
-    // Handle form submission (Add or Update ingredient)
-    ingredientForm.addEventListener("submit", async function (event) {
-        event.preventDefault();
-        const formData = new FormData(ingredientForm);
-        const newIngredient = {
-            name: formData.get("name"),
-            nutritionalValue: parseFloat(formData.get("nutritionalValue")),
-        };
+    // Search function
+    function searchIngredients() {
+        let input = searchBox.value.toLowerCase();
+        let rows = document.querySelectorAll("#ingredient-list-body tr");
 
-        const editId = ingredientForm.dataset.editId;
-
-        try {
-            if (editId) {
-                // Update existing ingredient
-                await fetch(`http://localhost:5001/api/ingredients/${editId}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(newIngredient),
-                });
-                delete ingredientForm.dataset.editId;
-            } else {
-                // Add new ingredient
-                await fetch("http://localhost:5001/api/ingredients", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(newIngredient),
-                });
+        rows.forEach(row => {
+            let nameCell = row.cells[0]; // First column (Name)
+            if (nameCell) {
+                let nameText = nameCell.textContent.toLowerCase();
+                row.style.display = nameText.includes(input) ? "" : "none";
             }
-            ingredientForm.reset();
-            fetchIngredients(); // Refresh ingredient list
-        } catch (error) {
-            console.error("Error saving ingredient:", error);
-        }
-    });
-
-    // Populate form for editing
-    window.editIngredient = function (id, name, nutritionalValue) {
-        document.getElementById("name").value = name;
-        document.getElementById("nutritionalValue").value = nutritionalValue;
-        ingredientForm.dataset.editId = id;
-    };
-
-    // Delete ingredient
-    window.deleteIngredient = async function (id) {
-        try {
-            await fetch(`http://localhost:5001/api/ingredients/${id}`, { method: "DELETE" });
-            fetchIngredients(); // Refresh list
-        } catch (error) {
-            console.error("Error deleting ingredient:", error);
-        }
-    };
+        });
+    }
 
     // Initial load
     fetchIngredients();
