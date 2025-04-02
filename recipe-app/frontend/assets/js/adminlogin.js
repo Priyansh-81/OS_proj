@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     loginForm.addEventListener("submit", async function (event) {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault(); // Prevent form submission
 
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value.trim();
@@ -33,6 +33,15 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
 
             if (response.ok) {
+                // Ensure admin data is stored consistently as an object
+                const adminProfile = {
+                    adminID: data.adminID,
+                    name: data.name,
+                    email: data.email,
+                };
+
+                localStorage.setItem("adminProfile", JSON.stringify(adminProfile));
+
                 alert("Login successful!");
                 window.location.href = "admin-dashboard.html"; // Redirect to dashboard
             } else {

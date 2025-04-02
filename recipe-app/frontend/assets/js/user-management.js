@@ -1,24 +1,29 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
     const userForm = document.getElementById('userForm');
     const userTable = document.querySelector('#userTable tbody');
 
-    // Sample Data (Replace with data from your database)
-    let users = [
-        { userID: 1, name: 'John Doe', email: 'john@example.com' },
-        { userID: 2, name: 'Jane Doe', email: 'jane@example.com' }
-    ];
+    // Fetch Users from Backend
+    async function fetchUsers() {
+        try {
+            const response = await fetch('http://localhost:5001/api/users');
+            const users = await response.json();
+            renderUsers(users);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    }
 
     // Render Users in the Table
-    function renderUsers() {
+    function renderUsers(users) {
         userTable.innerHTML = '';
         users.forEach(user => {
             const row = `<tr>
-                <td>${user.userID}</td>
-                <td>${user.name}</td>
-                <td>${user.email}</td>
+                <td>${user.UserID}</td>
+                <td>${user.Name}</td>
+                <td>${user.Email}</td>
                 <td>
-                    <button onclick="editUser(${user.userID})">Edit</button>
-                    <button onclick="deleteUser(${user.userID})">Delete</button>
+                    <button onclick="editUser(${user.UserID})">Edit</button>
+                    <button onclick="deleteUser(${user.UserID})">Delete</button>
                 </td>
             </tr>`;
             userTable.innerHTML += row;
@@ -26,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Handle Form Submission
-    userForm.addEventListener('submit', (e) => {
+    userForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const userID = document.getElementById('userID').value;
@@ -34,44 +39,50 @@ document.addEventListener("DOMContentLoaded", () => {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        if (userID) {
-            // Update User
-            const user = users.find(u => u.userID == userID);
-            if (user) {
-                user.name = name;
-                user.email = email;
-            }
-        } else {
-            // Add User (Simulate auto-increment ID)
-            const newUser = {
-                userID: users.length ? users[users.length - 1].userID + 1 : 1,
-                name,
-                email
-            };
-            users.push(newUser);
-        }
+        const endpoint = userID ? `/api/users/${userID}` : '/api/register';
+        const method = userID ? 'PUT' : 'POST';
 
-        userForm.reset();
-        document.getElementById('userID').value = '';
-        renderUsers();
+        try {
+            const response = await fetch(`http://localhost:5001${endpoint}`, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            if (!response.ok) throw new Error('Error saving user');
+
+            userForm.reset();
+            document.getElementById('userID').value = '';
+            fetchUsers();
+        } catch (error) {
+            console.error('Error saving user:', error);
+        }
     });
 
     // Edit User
-    window.editUser = (id) => {
-        const user = users.find(u => u.userID == id);
-        if (user) {
-            document.getElementById('userID').value = user.userID;
-            document.getElementById('name').value = user.name;
-            document.getElementById('email').value = user.email;
+    window.editUser = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5001/api/users/${id}`);
+            const user = await response.json();
+
+            document.getElementById('userID').value = user.UserID;
+            document.getElementById('name').value = user.Name;
+            document.getElementById('email').value = user.Email;
+        } catch (error) {
+            console.error('Error fetching user:', error);
         }
     };
 
     // Delete User
-    window.deleteUser = (id) => {
-        users = users.filter(user => user.userID !== id);
-        renderUsers();
+    window.deleteUser = async (id) => {
+        try {
+            await fetch(`http://localhost:5001/api/users/${id}`, { method: 'DELETE' });
+            fetchUsers();
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
     };
 
-    // Initial Render
-    renderUsers();
+    // Initial Fetch
+    fetchUsers();
 });

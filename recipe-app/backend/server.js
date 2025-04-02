@@ -1,14 +1,14 @@
 const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
-const cors = require('cors'); // Import CORS
+const cors = require('cors');
 
 const app = express();
 const port = 5001;
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cors({ origin: 'http://127.0.0.1:5500', credentials: true })); 
+app.use(cors({ origin: 'http://127.0.0.1:5500', credentials: true }));
 
 // MySQL Database Connection
 const db = mysql.createConnection({
@@ -23,37 +23,10 @@ db.connect(err => {
     console.error('Error connecting to MySQL: ', err);
     return;
   }
-  console.log('Connected to MySQL database');
+  console.log('✅ Connected to MySQL database');
 });
 
-app.post('/api/register', (req, res) => {
-  console.log('Received registration request:', req.body);
 
-  const { name, email, password } = req.body;
-
-  if (!name || !email || !password) {
-    return res.status(400).json({ error: 'All fields are required!' });
-  }
-
-  // Get the next UserID manually
-  db.query('SELECT MAX(UserID) AS maxId FROM Users', (err, result) => {
-    if (err) {
-      console.error('Error fetching max UserID: ', err);
-      return res.status(500).json({ error: 'Registration failed.' });
-    }
-
-    const nextUserID = (result[0].maxId || 0) + 1;
-
-    const query = 'INSERT INTO Users (UserID, Name, Email, Password) VALUES (?, ?, ?, ?)';
-    db.query(query, [nextUserID, name, email, password], (err, result) => {
-      if (err) {
-        console.error('Error inserting user: ', err);
-        return res.status(500).json({ error: 'Registration failed.' });
-      }
-      res.status(200).json({ message: 'Registration successful!' });
-    });
-  });
-});
 app.post('/api/admin/login', (req, res) => {
   const { email, password } = req.body;
 
@@ -86,19 +59,129 @@ app.post('/api/user/login', (req, res) => {
   const query = 'SELECT * FROM Users WHERE Email = ? AND Password = ?';
   db.query(query, [email, password], (err, results) => {
     if (err) {
-      console.error('Error fetching user: ', err);
+      console.error('Error fetching admin: ', err);
       return res.status(500).json({ error: 'Login failed.' });
     }
 
     if (results.length > 0) {
-      res.status(200).json({ message: 'User login successful!', user: results[0] });
+      res.status(200).json({ message: 'Login successful!', admin: results[0] });
     } else {
-      res.status(401).json({ error: 'Invalid user email or password.' });
+      res.status(401).json({ error: 'Invalid email or password.' });
     }
   });
 });
 
-// Start the server
+
+
+const getNextUserID = (callback) => {
+  db.query('SELECT MAX(UserID) AS maxId FROM Users', (err, result) => {
+    if (err) return callback(err, null);
+    const nextUserID = (result[0].maxId || 0) + 1;
+    callback(null, nextUserID);
+  });
+};
+
+// 🟢 Get All Users
+app.get('/api/users', (req, res) => {
+  db.query('SELECT UserID, Name, Email FROM Users', (err, results) => {
+    if (err) {
+      console.error('Error fetching users:', err);
+      return res.status(500).json({ error: 'Failed to fetch users.' });
+    }
+    res.status(200).json(results);
+  });
+});
+
+// 🟢 Get a Single User by ID
+app.get('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('SELECT UserID, Name, Email FROM Users WHERE UserID = ?', [id], (err, results) => {
+    if (err) {
+      console.error('Error fetching user:', err);
+      return res.status(500).json({ error: 'Failed to fetch user.' });
+    }
+    if (results.length === 0) return res.status(404).json({ error: 'User not found.' });
+    res.status(200).json(results[0]);
+  });
+});
+
+// 🟢 Register a New User
+app.post('/api/register', (req, res) => {
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: 'All fields are required!' });
+  }
+
+  getNextUserID((err, nextUserID) => {
+    if (err) {
+      console.error('Error fetching next UserID:', err);
+      return res.status(500).json({ error: 'Registration failed.' });
+    }
+
+    const query = 'INSERT INTO Users (UserID, Name, Email, Password) VALUES (?, ?, ?, ?)';
+    db.query(query, [nextUserID, name, email, password], (err) => {
+      if (err) {
+        console.error('Error inserting user:', err);
+        return res.status(500).json({ error: 'Registration failed.' });
+      }
+      res.status(201).json({ message: 'User registered successfully!' });
+    });
+  });
+});
+
+// 🟢 Recipe Management
+
+// Fetch all recipes
+app.get('/api/recipes', (req, res) => {
+  const query = 'SELECT * FROM Recipe';
+  db.query(query, (err, results) => {
+    if (err) return res.status(500).json({ error: 'Failed to fetch recipes' });
+    res.status(200).json(results);
+  });
+});
+
+// Add new recipe
+app.post('/api/recipes', async (req, res) => {
+  try {
+      console.log("Request body:", req.body); // Log incoming data
+
+      const { adminID, name, cuisine, dietType, difficulty, cookingTime, instructions } = req.body;
+
+      // Ensure all required fields are present
+      if (!adminID || !name || !cuisine || !dietType || !difficulty || !cookingTime || !instructions) {
+          console.error("Missing fields:", req.body);
+          return res.status(400).json({ error: "All fields are required" });
+      }
+
+      const query = `
+          INSERT INTO Recipe (AdminID, Name, Cuisine, DietType, Difficulty, CookingTime, Instructions) 
+          VALUES (?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      const [result] = await db.execute(query, [adminID, name, cuisine, dietType, difficulty, cookingTime, instructions]);
+
+      console.log("Insert result:", result);
+
+      res.status(201).json({ message: "Recipe added successfully", recipeID: result.insertId });
+  } catch (error) {
+      console.error("Error adding recipe:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Delete a recipe
+app.delete('/api/recipes/:id', (req, res) => {
+  const { id } = req.params;
+  const query = 'DELETE FROM Recipe WHERE RecipeID = ?';
+  db.query(query, [id], (err) => {
+    if (err) return res.status(500).json({ error: 'Failed to delete recipe' });
+    res.status(200).json({ message: 'Recipe deleted successfully' });
+  });
+});
+
+
+//Ingredient Management
+
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`🚀 Server running at http://localhost:${port}`);
 });

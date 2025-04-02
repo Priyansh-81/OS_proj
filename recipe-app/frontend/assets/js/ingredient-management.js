@@ -2,35 +2,41 @@ document.addEventListener("DOMContentLoaded", function () {
     const ingredientForm = document.getElementById("ingredient-form");
     const ingredientList = document.getElementById("ingredient-list");
 
-    let ingredients = JSON.parse(localStorage.getItem("ingredients")) || [];
+    // Fetch ingredients from backend
+    async function fetchIngredients() {
+        try {
+            const response = await fetch("http://localhost:5001/api/ingredients");
+            const ingredients = await response.json();
+            renderIngredients(ingredients);
+        } catch (error) {
+            console.error("Error fetching ingredients:", error);
+        }
+    }
 
-    // Function to render ingredients in the table
-    function renderIngredients() {
+    // Render ingredients in table
+    function renderIngredients(ingredients) {
         ingredientList.innerHTML = `
             <tr>
                 <th>Name</th>
                 <th>Nutritional Value</th>
                 <th>Actions</th>
             </tr>`;
-        
-        ingredients.forEach((ingredient, index) => {
-            const ingredientRow = document.createElement("tr");
-            ingredientRow.innerHTML = `
-                <td>${ingredient.name}</td>
-                <td>${ingredient.nutritionalValue}</td>
-                <td><button onclick="editIngredient(${index})">Edit</button> <button onclick="deleteIngredient(${index})">Delete</button></td>
-            `;
-            ingredientList.appendChild(ingredientRow);
+
+        ingredients.forEach((ingredient) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${ingredient.Name}</td>
+                <td>${ingredient.NutritionalValue}</td>
+                <td>
+                    <button onclick="editIngredient(${ingredient.IngredientID}, '${ingredient.Name}', ${ingredient.NutritionalValue})">Edit</button>
+                    <button onclick="deleteIngredient(${ingredient.IngredientID})">Delete</button>
+                </td>`;
+            ingredientList.appendChild(row);
         });
     }
 
-    // Save ingredients to localStorage
-    function saveIngredients() {
-        localStorage.setItem("ingredients", JSON.stringify(ingredients));
-    }
-
-    // Handle form submission to add or edit an ingredient
-    ingredientForm.addEventListener("submit", function (event) {
+    // Handle form submission (Add or Update ingredient)
+    ingredientForm.addEventListener("submit", async function (event) {
         event.preventDefault();
         const formData = new FormData(ingredientForm);
         const newIngredient = {
@@ -38,37 +44,49 @@ document.addEventListener("DOMContentLoaded", function () {
             nutritionalValue: parseFloat(formData.get("nutritionalValue")),
         };
 
-        // If editing an existing ingredient, update it
-        if (ingredientForm.dataset.editIndex) {
-            const index = ingredientForm.dataset.editIndex;
-            ingredients[index] = newIngredient;
-            delete ingredientForm.dataset.editIndex; // Clear the edit index
-        } else {
-            ingredients.push(newIngredient);
-        }
+        const editId = ingredientForm.dataset.editId;
 
-        saveIngredients();
-        renderIngredients();
-        ingredientForm.reset(); // Reset the form after submission
+        try {
+            if (editId) {
+                // Update existing ingredient
+                await fetch(`http://localhost:5001/api/ingredients/${editId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newIngredient),
+                });
+                delete ingredientForm.dataset.editId;
+            } else {
+                // Add new ingredient
+                await fetch("http://localhost:5001/api/ingredients", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newIngredient),
+                });
+            }
+            ingredientForm.reset();
+            fetchIngredients(); // Refresh ingredient list
+        } catch (error) {
+            console.error("Error saving ingredient:", error);
+        }
     });
 
-    // Function to edit an ingredient
-    window.editIngredient = function (index) {
-        const ingredient = ingredients[index];
-        document.getElementById("name").value = ingredient.name;
-        document.getElementById("nutritionalValue").value = ingredient.nutritionalValue;
-        
-        // Store the index in the form for later editing
-        ingredientForm.dataset.editIndex = index;
+    // Populate form for editing
+    window.editIngredient = function (id, name, nutritionalValue) {
+        document.getElementById("name").value = name;
+        document.getElementById("nutritionalValue").value = nutritionalValue;
+        ingredientForm.dataset.editId = id;
     };
 
-    // Function to delete an ingredient
-    window.deleteIngredient = function (index) {
-        ingredients.splice(index, 1);
-        saveIngredients();
-        renderIngredients();
+    // Delete ingredient
+    window.deleteIngredient = async function (id) {
+        try {
+            await fetch(`http://localhost:5001/api/ingredients/${id}`, { method: "DELETE" });
+            fetchIngredients(); // Refresh list
+        } catch (error) {
+            console.error("Error deleting ingredient:", error);
+        }
     };
 
-    // Initial render of ingredients
-    renderIngredients();
+    // Initial load
+    fetchIngredients();
 });

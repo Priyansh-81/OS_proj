@@ -30,9 +30,8 @@
     </main>
 
     <script>
-        const userId = 1; // Example User ID, replace with actual logged-in user ID
+        const userId = 1; 
 
-        // Fetch favorites for the logged-in user
         async function loadFavorites() {
             try {
                 const response = await fetch(`/api/getFavorites?userId=${userId}`);
@@ -46,7 +45,6 @@
                     return;
                 }
 
-                // Loop through each favorite and display it
                 favorites.forEach(async (favorite) => {
                     const recipeResponse = await fetch(`/api/getRecipeById?id=${favorite.recipeId}`);
                     const recipe = await recipeResponse.json();
