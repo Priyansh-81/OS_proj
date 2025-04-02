@@ -34,23 +34,19 @@
         </form>
 
         <h2>Ingredient List</h2>
-        <table id="ingredient-list">
-            <tr>
-                <th>Name</th>
-                <th>Nutritional Value</th>
-                <th>Actions</th>
-            </tr>
-            <!-- Example Ingredients will be dynamically loaded here -->
-            <tr>
-                <td>Flour</td>
-                <td>364.00</td>
-                <td><button onclick="editIngredient(0)">Edit</button> <button onclick="deleteIngredient(0)">Delete</button></td>
-            </tr>
-            <tr>
-                <td>Sugar</td>
-                <td>387.00</td>
-                <td><button onclick="editIngredient(1)">Edit</button> <button onclick="deleteIngredient(1)">Delete</button></td>
-            </tr>
+        <table id="recipeList">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>nutritionalValue</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <!-- Added correct tbody ID for JS -->
+            <tbody id="recipeTableBody">
+                <!-- Dynamic Recipe Rows will be added here -->
+            </tbody>
         </table>
     </main>
 </div>

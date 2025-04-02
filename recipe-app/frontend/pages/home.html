@@ -19,7 +19,7 @@
             </ul>
         </nav>
     </header>
-
+    
     <main>
         <section class="search-bar">
             <h2>Find Your Next Favorite Recipe</h2>
@@ -32,23 +32,17 @@
             <div class="recipe-grid">
                 <div class="recipe-card">
                     <img src="../assets/images/recipe1.jpg" alt="Recipe 1">
-                    <h3>Spaghetti Carbonara</h3>
-                    <p>Classic Italian pasta dish.</p>
-                    <a href="./recipe_detail.html">View Recipe</a>
+                    <button onclick="expand('${recipe.RecipeID}')">View</button>
                 </div>
 
                 <div class="recipe-card">
                     <img src="../assets/images/recipe2.jpg" alt="Recipe 2">
-                    <h3>Grilled Chicken Salad</h3>
-                    <p>Healthy and delicious.</p>
-                    <a href="recipe_detail.html">View Recipe</a>
+                    <button onclick="expand('${recipe.RecipeID}')">View</button>
                 </div>
 
                 <div class="recipe-card">
                     <img src="../assets/images/recipe3.jpg" alt="Recipe 3">
-                    <h3>Vegetable Stir Fry</h3>
-                    <p>Quick and easy meal.</p>
-                    <a href="recipe_detail.html">View Recipe</a>
+                    <button onclick="expand('${recipe.RecipeID}')">View</button>
                 </div>
             </div>
         </section>
@@ -61,5 +55,6 @@
         }
     </script>
     <script src="../assets/js/home.js"></script>
+    <script src="../assets/js/recipe.js"></script>
 </body>
 </html>

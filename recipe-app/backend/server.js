@@ -140,6 +140,18 @@ app.get('/api/recipes', (req, res) => {
   });
 });
 
+app.get('/api/recipes/:id', (req, res) => {
+  const { id } = req.params;
+  const query = 'SELECT * FROM Recipe WHERE RecipeID = ?';
+  db.query(query, [id], (err, results) => {
+    if (err) return res.status(500).json({ error: 'Failed to fetch recipe' });
+    if (results.length === 0) return res.status(404).json({ error: 'Recipe not found' });
+    res.status(200).json(results[0]);
+  });
+}
+);
+// Fetch recipes by filter.
+
 // Add new recipe
 app.post('/api/recipes', async (req, res) => {
   try {
@@ -179,6 +191,50 @@ app.delete('/api/recipes/:id', (req, res) => {
   });
 });
 
+app.get('/api/ingredients', (req, res) => {
+  db.query('SELECT * FROM Ingredients', (err, results) => {
+    if (err) {
+      console.error('Error fetching ingredients:', err);
+      return res.status(500).json({ error: 'Failed to fetch ingredients.' });
+    }
+    res.status(200).json(results);
+  });
+});
+// Add new ingredient
+app.post('/api/ingredients', (req, res) => {
+  const { name, nutritionalValue } = req.body;
+
+  if (!name || !nutritionalValue) {
+    return res.status(400).json({ error: 'All fields are required!' });
+  }
+
+  const query = 'INSERT INTO Ingredients (Name, NutritionalValue) VALUES (?, ?)';
+  db.query(query, [name, nutritionalValue], (err) => {
+    if (err) {
+      console.error('Error inserting ingredient:', err);
+      return res.status(500).json({ error: 'Failed to add ingredient.' });
+    }
+    res.status(201).json({ message: 'Ingredient added successfully!' });
+  });
+});
+// Update an ingredient
+app.put('/api/ingredients/:id', (req, res) => {
+  const { id } = req.params;
+  const { name, nutritionalValue } = req.body;
+
+  if (!name || !nutritionalValue) {
+    return res.status(400).json({ error: 'All fields are required!' });
+  }
+
+  const query = 'UPDATE Ingredients SET Name = ?, NutritionalValue = ? WHERE IngredientID = ?';
+  db.query(query, [name, nutritionalValue, id], (err) => {
+    if (err) {
+      console.error('Error updating ingredient:', err);
+      return res.status(500).json({ error: 'Failed to update ingredient.' });
+    }
+    res.status(200).json({ message: 'Ingredient updated successfully!' });
+  });
+});
 
 //Ingredient Management
 

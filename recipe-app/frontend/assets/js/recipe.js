@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupFilters();
 });
 
-// 🟢 Fetch Recipes from Backend
+
 async function fetchRecipes() {
     try {
         const response = await fetch("http://localhost:5001/api/recipes"); 
@@ -42,10 +42,9 @@ function displayRecipes(recipes) {
     });
 }
 
-function exapnd(recipeID){
-
+function expand(recipeID) {
+    window.location.href = `recipe-detail.html?id=${recipeID}`;
 }
-
 
 function setupFilters() {
     document.querySelectorAll("select").forEach(filter => {
@@ -68,9 +67,7 @@ function applyFilters() {
         if (cuisineFilter !== "all") {
             filteredRecipes = filteredRecipes.filter(recipe => recipe.cuisine === cuisineFilter);
         }
-        if (dietFilter !== "all") {
-            filteredRecipes = filteredRecipes.filter(recipe => recipe && recipe.dietType && recipe.dietType === dietFilter);
-        }
+
         if (difficultyFilter !== "all") {
             filteredRecipes = filteredRecipes.filter(recipe => recipe.difficulty === difficultyFilter);
         }
