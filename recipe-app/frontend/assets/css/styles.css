@@ -55,21 +55,21 @@ nav ul li a:hover {
 
 /* Buttons */
 button {
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    background: linear-gradient(135deg, #ff7155, #ff8a66);
+    padding: 10px 14px;
+    font-size: 15px;
+    font-weight: 500;
+    background: #ff6f61;
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 8px;
-    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
 }
 
 button:hover {
-    background: linear-gradient(135deg, #ff5a42, #ff7155);
-    transform: scale(1.05);
-    box-shadow: 0px 3px 8px rgba(255, 113, 85, 0.3);
+    background: #e65a50;
+    transform: translateY(-2px);
+    box-shadow: 0px 2px 6px rgba(230, 90, 80, 0.3);
 }
 
 /* Search Bar */
@@ -108,29 +108,25 @@ button:hover {
     padding: 20px;
 }
 
-/* Featured Recipes */
-.featured-recipes {
-    text-align: center;
-    padding: 40px 25px;
-}
 
-.featured-recipes h2 {
-    font-size: 26px;
-    font-weight: bold;
-    color: #444;
+/* Recipe Items */
+.recipe-item {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s;
 }
 
-.featured-recipes a {
-    color: #ff6f61;
-    font-weight: bold;
-    text-decoration: none;
-    transition: color 0.3s;
+.recipe-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-.featured-recipes a:hover {
-    color: #e64a45;
-    text-decoration: underline;
+.recipe-item h3 {
+    color: #ff5733;
+    margin-bottom: 8px;
 }
 
 /* Table */
@@ -224,24 +220,49 @@ form button {
     }
 }
 .view-button {
-    display: inline-block;
-    padding: 8px 16px;
-    background: linear-gradient(to right, #ff7e5f, #ff5733); /* Smooth gradient */
+    padding: 6px 12px;
+    background: #ff6f61;
     color: white;
     font-size: 14px;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
     border: none;
-    box-shadow: 0 2px 5px rgba(255, 87, 51, 0.2);
-    width: 100px; /* Adjust as needed */
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .view-button:hover {
-    background: linear-gradient(to right, #ff5733, #e64a19);
-    box-shadow: 0 4px 8px rgba(255, 87, 51, 0.4);
-    transform: scale(1.05);
+    background: #e65a50;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.filters label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #444;
+}
+
+.filters select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f9f9f9;
+    cursor: pointer;
+    transition: border 0.2s;
+}
+
+.filters select:focus {
+    border-color: #ff6f61;
+    outline: none;
 }
